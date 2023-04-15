@@ -1,0 +1,31 @@
+{
+    "name": "nembie/iban-rule",
+    "description": "A Laravel validation rule to validate IBAN numbers",
+    "keywords": [
+        "laravel",
+        "validation",
+        "rule",
+        "Nembie",
+        "iban-rule"
+    ],
+    "homepage": "https://github.com/Nembie/iban-rule",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luca P",
+            "email": "lucapacitto.dev@gmail.com",
+            "homepage": "https://nembie.it",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nembie\\IbanRule\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
