@@ -36,4 +36,4 @@ If you find any issues or have suggestions for improvements, feel free to open a
 
 ### License
 
-This package is open-sourced software licensed under the MIT license.
+This package is open-sourced software licensed under the [MIT license](https://github.com/Nembie/iban-rule/blob/main/LICENSE.md).
