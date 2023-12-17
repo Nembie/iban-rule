@@ -38,6 +38,10 @@ If you find any issues or have suggestions for improvements, feel free to open a
 
 [Full list of supported countries](https://github.com/Nembie/nova-iban-field/blob/master/COUNTRIES.md)
 
+### 🔨 Test
+
+```composer test```
+
 ### 📝 License
 
 This package is open-sourced software licensed under the [MIT license](https://github.com/Nembie/iban-rule/blob/main/LICENSE.md).
