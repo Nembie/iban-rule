@@ -7,7 +7,19 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class ValidIban implements ValidationRule
 {
+    /**
+     * The country rules.
+     *
+     * @var array
+     */
     static $countryRules = null;
+
+    /**
+     * The validator instance.
+     *
+     * @var \Illuminate\Contracts\Validation\Validator
+     */
+    protected $validator;
 
     /**
      * Run the validation rule.
@@ -16,8 +28,20 @@ class ValidIban implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->validateIban($value))
+        if (!$this->validateIban($value)){
+            $this->validator->errors();
             $fail('The :attribute is not a valid IBAN.');
+        }
+    }
+
+    /**
+     * Set the validator instance.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     */
+    public function setValidator($validator): void
+    {
+        $this->validator = $validator;
     }
 
     /**
