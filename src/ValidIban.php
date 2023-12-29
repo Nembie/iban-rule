@@ -34,7 +34,7 @@ class ValidIban implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!$this->validateIban($value)){
-            $this->validator->errors();
+            $this->validator ? $this->validator->errors() : null;
             $fail('The :attribute is not a valid IBAN.');
         }
     }
