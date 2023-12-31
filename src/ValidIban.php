@@ -3,6 +3,7 @@
 namespace Nembie\IbanRule;
 
 use Closure;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
@@ -33,10 +34,8 @@ class ValidIban implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!$this->validateIban($value)){
-            $this->validator ? $this->validator->errors() : null;
-            $fail('The :attribute is not a valid IBAN.');
-        }
+        if (!$this->checkIBAN($value))
+            $this->error($fail);
     }
 
     /**
@@ -56,21 +55,19 @@ class ValidIban implements ValidationRule
      * @param  string  $iban
      * @return bool
      */
-    protected function validateIban($iban): bool
+    protected function checkIBAN($iban): bool
     {
         // Check if IBAN contains white space or special characters
-        if (preg_match('/\s|[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $iban)) {
+        if (preg_match('/\s|[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $iban))
             return false;
-        }
 
-        $countryRules = $this->loadCountryRules();
+        $countryRules = $this->getCountryRules();
 
         $countryCode = substr($iban, 0, 2);
         $countryObj = $countryRules['sepa'][$countryCode] ?? $countryRules['not_sepa'][$countryCode] ?? null;
 
-        if ($countryObj === null) {
+        if ($countryObj === null)
             return false;
-        }
 
         // Get validation rules
         $rules = array_map(fn($attr) => $attr[1], $countryObj);
@@ -86,9 +83,8 @@ class ValidIban implements ValidationRule
             $ibanLength += $numbers;
 
             // Check if the string part is of the correct type
-            if (($letter === 'a' && !ctype_alpha($checkString)) || ($letter === 'n' && !ctype_digit($checkString))) {
+            if (($letter === 'a' && !ctype_alpha($checkString)) || ($letter === 'n' && !ctype_digit($checkString)))
                 return false;
-            }
 
             $tempIban = substr($tempIban, $numbers);
         }
@@ -97,11 +93,11 @@ class ValidIban implements ValidationRule
     }
 
     /**
-     * Load country rules.
+     * Get country rules. If not already loaded, load them.
      *
      * @return array
      */
-    protected function loadCountryRules(): array
+    protected function getCountryRules(): array
     {
         if (self::$countryRules === null) {
             self::$countryRules = json_decode(
@@ -113,5 +109,21 @@ class ValidIban implements ValidationRule
         }
 
         return self::$countryRules;
+    }
+
+    /**
+     * Get the validation error message.
+     *
+     * @param  Closure  $fail
+     */
+    protected function error(Closure $fail)
+    {
+        $this->validator && $this->validator->errors();
+
+        return $fail(
+            (!class_exists('Lang') || !Lang::has('validation.iban')) ?
+                'The :attribute is not a valid IBAN.'
+                : Lang::get('validation.iban')
+        );
     }
 }

@@ -1,6 +1,7 @@
 <?php
-use PHPUnit\Framework\TestCase;
+
 use Nembie\IbanRule\ValidIban;
+use PHPUnit\Framework\TestCase;
 
 class ValidIbanTest extends TestCase
 {
