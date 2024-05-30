@@ -58,7 +58,7 @@ class ValidIban implements ValidationRule
     protected function checkIBAN($iban): bool
     {
         // Check if IBAN contains white space or special characters
-        if (preg_match('/\s|[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $iban))
+        if (preg_match('/\s|[\'^£$%&*()}{@#~?<>,|=_+¬-]/', $iban))
             return false;
 
         $countryRules = $this->getCountryRules();
