@@ -76,6 +76,6 @@ class ValidIbanTest extends TestCase
             $failed = true;
         });
 
-        $this->assertTrue($failed, 'Validation should have failed for lowercase IBAN.');
+        $this->assertFalse($failed, 'Lowercase IBAN should be accepted after normalization.');
     }
 }

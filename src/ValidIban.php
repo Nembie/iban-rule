@@ -29,7 +29,9 @@ class ValidIban implements ValidationRule
      */
     protected function checkIBAN(string $iban): bool
     {
-        // IBAN must contain only uppercase letters and digits
+        $iban = strtoupper($iban);
+
+        // IBAN must contain only letters and digits
         if (!preg_match('/^[A-Z0-9]+$/', $iban))
             return false;
 
