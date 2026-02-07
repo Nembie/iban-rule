@@ -1,5 +1,14 @@
 # CHANGELOG.md
 
+## v2.0.0 (2025-02-07)
+- Added support for PHP 8.2+ and Laravel 12
+- Added MOD-97 checksum validation (ISO 7064)
+- Added case-insensitive IBAN input (lowercase is now accepted)
+- Replaced special character blocklist regex with allowlist
+- Fixed Lang facade error handling outside Laravel context
+- Upgraded to PHPUnit 10/11
+- Removed `setValidator()` method (was dead code)
+
 ## v1.0.2 (2023-12-31)
 - Fix on validator  🚑  [[Commit: c4033d4]](https://github.com/Nembie/iban-rule/commit/c4033d49aa4a312b3087e7d9aaaf5d6f27623243)
 - Added custom error message 👽 [[Commit: a78c58f]](https://github.com/Nembie/iban-rule/commit/a78c58fb31d603c18e447e9dd828fc15cd5b5a05)

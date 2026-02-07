@@ -8,7 +8,7 @@
 This package provides a custom validation rule for Laravel to validate International Bank Account Numbers (IBANs). It uses the validation rules defined by the Single Euro Payments Area (SEPA) and other non-SEPA countries to ensure that the given IBAN is valid.
 
 ### 🧰 Requirements
-- ```PHP >= 8.1```
+- ```PHP >= 8.2```
 - ```Laravel >= 10```
 
 ### ⚙️ Installation

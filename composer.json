@@ -1,7 +1,7 @@
 {
     "name": "nembie/iban-rule",
     "description": "A Laravel validation rule to validate IBAN numbers",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "keywords": [
         "laravel",
         "validation",
@@ -15,7 +15,6 @@
         {
             "name": "Luca P",
             "email": "lucapacitto.dev@gmail.com",
-            "homepage": "https://nembie.it",
             "role": "Developer"
         }
     ],
