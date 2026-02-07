@@ -4,9 +4,7 @@ namespace Nembie\IbanRule;
 
 use Closure;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Translation\PotentiallyTranslatedString;
 
 class ValidIban implements ValidationRule
 {
@@ -18,19 +16,7 @@ class ValidIban implements ValidationRule
     protected static $countryRules;
 
     /**
-     * The validator instance.
-     *
-     * @var Validator
-     */
-    protected $validator;
-
-    /**
      * Run the validation rule.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  \Closure(string): PotentiallyTranslatedString  $fail
-     * @return void
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -39,26 +25,12 @@ class ValidIban implements ValidationRule
     }
 
     /**
-     * Set the validator instance.
-     *
-     * @param  Validator  $validator
-     * @return void
-     */
-    public function setValidator($validator): void
-    {
-        $this->validator = $validator;
-    }
-
-    /**
      * Validate IBAN.
-     *
-     * @param  string  $iban
-     * @return bool
      */
-    protected function checkIBAN($iban): bool
+    protected function checkIBAN(string $iban): bool
     {
-        // Check if IBAN contains white space or special characters
-        if (preg_match('/\s|[\'^£$%&*()}{@#~?<>,|=_+¬-]/', $iban))
+        // IBAN must contain only uppercase letters and digits
+        if (!preg_match('/^[A-Z0-9]+$/', $iban))
             return false;
 
         $countryRules = $this->getCountryRules();
@@ -72,7 +44,7 @@ class ValidIban implements ValidationRule
         // Get validation rules
         $rules = array_map(fn($attr) => $attr[1], $countryObj);
 
-        // Validate IBAN against rules
+        // Validate IBAN structure against country rules
         $tempIban = $iban;
         $ibanLength = 0;
 
@@ -82,14 +54,43 @@ class ValidIban implements ValidationRule
             $checkString = substr($tempIban, 0, $numbers);
             $ibanLength += $numbers;
 
-            // Check if the string part is of the correct type
             if (($letter === 'a' && !ctype_alpha($checkString)) || ($letter === 'n' && !ctype_digit($checkString)))
                 return false;
 
             $tempIban = substr($tempIban, $numbers);
         }
 
-        return $ibanLength == strlen($iban);
+        if ($ibanLength !== strlen($iban))
+            return false;
+
+        // Validate MOD-97 checksum (ISO 7064)
+        return $this->validateMod97($iban);
+    }
+
+    /**
+     * Validate IBAN checksum using MOD-97 algorithm (ISO 7064).
+     */
+    protected function validateMod97(string $iban): bool
+    {
+        // Move the first 4 characters to the end
+        $rearranged = substr($iban, 4) . substr($iban, 0, 4);
+
+        // Replace each letter with two digits (A=10, B=11, ..., Z=35)
+        $numericString = '';
+        for ($i = 0, $len = strlen($rearranged); $i < $len; $i++) {
+            $char = $rearranged[$i];
+            $numericString .= ctype_alpha($char)
+                ? (ord($char) - ord('A') + 10)
+                : $char;
+        }
+
+        // Compute remainder digit by digit to avoid big integer overflow
+        $remainder = 0;
+        for ($i = 0, $len = strlen($numericString); $i < $len; $i++) {
+            $remainder = ($remainder * 10 + (int) $numericString[$i]) % 97;
+        }
+
+        return $remainder === 1;
     }
 
     /**
@@ -113,17 +114,19 @@ class ValidIban implements ValidationRule
 
     /**
      * Get the validation error message.
-     *
-     * @param  Closure  $fail
      */
     protected function error(Closure $fail)
     {
-        $this->validator && $this->validator->errors();
+        $message = 'The :attribute is not a valid IBAN.';
 
-        return $fail(
-            (!class_exists('Lang') || !Lang::has('validation.iban')) ?
-                'The :attribute is not a valid IBAN.'
-                : Lang::get('validation.iban')
-        );
+        try {
+            if (Lang::has('validation.iban')) {
+                $message = Lang::get('validation.iban');
+            }
+        } catch (\RuntimeException) {
+            // Lang facade not available outside Laravel
+        }
+
+        return $fail($message);
     }
 }
