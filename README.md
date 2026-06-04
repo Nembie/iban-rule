@@ -1,6 +1,5 @@
 ## 🏦 IBAN Validation Rule for Laravel
 
-[![GitHub](https://img.shields.io/github/license/Nembie/iban-rule?style=flat-square)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/Nembie/iban-rule?style=flat-square)](Issues)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/Nembie/iban-rule?style=flat-square)](Downloads)
 [![GitHub Release](https://img.shields.io/github/v/release/Nembie/iban-rule?style=flat-square)](Release)
