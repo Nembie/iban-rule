@@ -9,7 +9,7 @@ This package provides a custom validation rule for Laravel to validate Internati
 
 ### 🧰 Requirements
 - ```PHP >= 8.2```
-- ```Laravel >= 10```
+- ```Laravel >= 10``` (10, 11, 12, 13)
 
 ### ⚙️ Installation
 You can install this package using Composer:

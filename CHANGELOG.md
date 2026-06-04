@@ -1,5 +1,8 @@
 # CHANGELOG.md
 
+## v2.0.1 (2026-04-15)
+- Added support for Laravel 13
+
 ## v2.0.0 (2025-02-07)
 - Added support for PHP 8.2+ and Laravel 12
 - Added MOD-97 checksum validation (ISO 7064)
